@@ -1,12 +1,14 @@
 def init():
 
+	# ################# Settings for filtering noise via connected components ##################
+
 	global size, thresh, cutoff, list_p # inc thresh at higher speeds but will include outliers
 
 	# Good for slow speed to remove outliers
 
-	size = 16   # size of queue of points
-	thresh = 5  # distance between two points to be connected
-	cutoff = 6 # size of connected component to look for atleast
+	size = 15   # size of queue of points
+	thresh = 20  # distance between two points to be connected
+	cutoff = 5 # size of connected component to look for atleast
 
 	# Good for slow speed to remove outliers
 
@@ -39,10 +41,8 @@ def init():
 
 	# ################################# Settings for PID Controller ####################################
 
-	global y_thresh, x_thresh, Kp, err_x, err_y
-
-	y_thresh = 20
-	x_thresh = 20
-	Kp = 0.0003
+	y_thresh = 5
+	x_thresh = 5
+	Kp = 0.01
 	err_x = 0.0
 	err_y = 0.0

@@ -2,15 +2,14 @@ import rospy
 from geometry_msgs.msg import Twist
 import settings
 
+pub = rospy.Publisher('cmd_vel', Twist, queue_size=100)
+
 def talker():
 
-	 # global settings.y_thresh, settings.x_thresh, settings.err_x, settings.Kp, settings.err_y
+	# print("I am talking")
+	# print(settings.Kp)
+	global pub
 	
-
-	print("I am talking")
-	print(settings.Kp)
-
-	pub = rospy.Publisher('cmd_vel', Twist, queue_size=100)
 	#rospy.init_node('talker', anonymous=True)
 	#rate = rospy.Rate(10) # 10hz
 	if (settings.err_x>0):
@@ -23,8 +22,8 @@ def talker():
 			settings.err_x=0.0
 		elif (abs(settings.err_x)>settings.x_thresh):
 			settings.err_x=settings.Kp*settings.err_x
-	print("I am talking2 ")	
-	print(settings.err_x)	
+	# print("I am talking2 ")	
+	# print(settings.err_x)	
 
 	if (settings.err_y>0):
 		if (settings.err_y<settings.x_thresh):
@@ -37,28 +36,24 @@ def talker():
 			elif (abs(settings.err_y)>settings.y_thresh):
 				 settings.err_y=settings.Kp*settings.err_y
 
-	print(settings.err_x)	
-
-
-	move_cmd=Twist()
-	# move_cmd.linear.x=-1*settings.err_y
-	# move_cmd.linear.y=settings.err_x
-	move_cmd.linear.x=settings.err_y
-	move_cmd.linear.y=settings.err_x
-	move_cmd.linear.z=0.0
-	move_cmd.angular.x=0.0
-	move_cmd.angular.y=0.0
-	move_cmd.angular.z=0.0
-
-
+	# print(settings.err_x)
 	
-	pub.publish(move_cmd)
+	pub.publish(twist_obj(settings.err_y, settings.err_x, 0.0, 0.0, 0.0, 0.0))
         
+def twist_obj(x,y,z,a,b,c):
+	move_cmd=Twist()
+	move_cmd.linear.x=x
+	move_cmd.linear.y=y
+	move_cmd.linear.z=z
+	move_cmd.angular.x=a
+	move_cmd.angular.y=b
+	move_cmd.angular.z=c
+	return move_cmd
 
+def hover():
+	global pub
+	pub.publish(twist_obj(0.0, 0.0, 0.0, 0.0, 0.0, 0.0))
 
-
-# if __name__ == '__main__':
-# 	try:
-# 		talker()
-# 	except rospy.ROSInterruptException:
-# 		pass
+def move_up():
+	global pub
+	pub.publish(twist_obj(0.0, 0.0, 0.1, 0.0, 0.0, 0.0))

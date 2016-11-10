@@ -46,3 +46,8 @@ def init():
 	Kp = 0.0003
 	err_x = 0.0
 	err_y = 0.0
+
+	global ht_thresh
+
+	# ht_thresh = 1500
+	ht_thresh = 2000
